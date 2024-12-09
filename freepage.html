@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ping Pong</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #181818;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #game-board {
+            background-color: #282c34;
+            border: 2px solid #fff;
+            height: 400px;
+            width: 800px;
+            position: relative;
+        }
+
+        #paddle-left, #paddle-right {
+            background-color: #fff;
+            height: 80px;
+            width: 10px;
+            position: absolute;
+        }
+
+        #ball {
+            background-color: #fff;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        #score {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="game-board">
+            <div id="paddle-left"></div>
+            <div id="paddle-right"></div>
+            <div id="ball"></div>
+        </div>
+        <div id="score">Player 1: 0 | Player 2: 0</div>
+    </div>
+    <script>
+         const gameBoard = document.getElementById('game-board');
+            const paddleLeft = document.getElementById('paddle-left');
+            const paddleRight = document.getElementById('paddle-right');
+            const ball = document.getElementById('ball');
+            const scoreDisplay = document.getElementById('score');
+
+            let ballSpeedX = 4;
+            let ballSpeedY = 4;
+            let ballPosX = gameBoard.clientWidth / 2 - 10;
+            let ballPosY = gameBoard.clientHeight / 2 - 10;
+            let paddleLeftY = gameBoard.clientHeight / 2 - 40;
+            let paddleRightY = gameBoard.clientHeight / 2 - 40;
+            let player1Score = 0;
+            let player2Score = 0;
+
+            function updateGame() {
+                ballPosX += ballSpeedX;
+                ballPosY += ballSpeedY;
+
+                if (ballPosY <= 0 || ballPosY >= gameBoard.clientHeight - 20) {
+                    ballSpeedY = -ballSpeedY;
+                }
+
+                if (ballPosX <= 20 && ballPosY >= paddleLeftY && ballPosY <= paddleLeftY + 80) {
+                    ballSpeedX = -ballSpeedX;
+                } else if (ballPosX >= gameBoard.clientWidth - 30 && ballPosY >= paddleRightY && ballPosY <= paddleRightY + 80) {
+                    ballSpeedX = -ballSpeedX;
+                } else if (ballPosX <= 0) {
+                    player2Score++;
+                    resetBall();
+                } else if (ballPosX >= gameBoard.clientWidth) {
+                    player1Score++;
+                    resetBall();
+                }
+
+                ball.style.left = ballPosX + 'px';
+                ball.style.top = ballPosY + 'px';
+                scoreDisplay.innerText = `Player 1: ${player1Score} | Player 2: ${player2Score}`;
+            }
+
+            function resetBall() {
+                ballPosX = gameBoard.clientWidth / 2 - 10;
+                ballPosY = gameBoard.clientHeight / 2 - 10;
+                ballSpeedX = -ballSpeedX;
+            }
+
+            document.addEventListener('mousemove', (event) => {
+                const mouseY = event.clientY - gameBoard.getBoundingClientRect().top;
+                paddleLeftY = mouseY - 40;
+                paddleRightY = mouseY - 40;
+                paddleLeft.style.top = paddleLeftY + 'px';
+                paddleRight.style.top = paddleRightY + 'px';
+            });
+
+            setInterval(updateGame, 1000 / 60);
+    </script>
+</body>
+</html>

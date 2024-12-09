@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Posts</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <div class="bg-black flex justify-between items-center max-w-[80%] mx-auto relative m-16">
+    <ul class="flex list-none">
+      <li class="px-[20px]">
+        <a href="index.html" class="text-white uppercase block py-[5px] px-[40px] text-[14px] hover:text-[#e76647] transition-colors">HOME</a>
+      </li>
+      <li class="px-[20px]">
+        <a href="biodata.html" class="text-white uppercase block py-[5px] px-[40px] text-[14px] hover:text-[#e76647] transition-colors">Biodata</a>
+      </li>
+      <li class="px-[20px]">
+        <a href="contact.html" class="text-white uppercase block py-[5px] px-[40px] text-[14px] hover:text-[#e76647] transition-colors">Contact Us</a>
+      </li>
+      <li class="px-[20px]">
+        <a href="posts.html" class="text-[#e76647] uppercase block py-[5px] px-[40px] text-[14px]">Posts</a>
+    </li>
+    <li class="px-[20px]">
+        <a href="freepage.html" class="text-white uppercase block py-[5px] px-[40px] text-[14px] hover:text-[#e76647] transition-colors">Free Page</a>
+    </li>
+    </ul>
+    <a href="#" class="bg-[#f1632d] block px-[20px] text-white uppercase h-[80px] leading-[80px] text-[14px] hover:bg-[#d14f3e] transition-colors">Get a Quote</a>
+  </div>
+
+  <div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold text-center mb-6">Posts Details</h1>
+    <div id="posts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  </div>
+
+  <script>
+    // Fetch data from the API
+    fetch('https://jsonplaceholder.typicode.com/posts/40')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        const container = document.getElementById('posts-container');
+
+        // Create a card for the post
+        const postCard = document.createElement('div');
+        postCard.className = 'bg-white shadow-md rounded-lg p-4';
+
+        postCard.innerHTML = `
+          <h2 class="text-xl font-semibold text-blue-600 mb-2">Post ID: ${data.id}</h2>
+          <h3 class="text-lg font-bold text-gray-800 mb-2">${data.title}</h3>
+          <p class="text-gray-700">${data.body}</p>
+        `;
+
+        container.appendChild(postCard);
+      })
+      .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+        const container = document.getElementById('posts-container');
+        container.innerHTML = '<p class="text-red-500">Failed to load post data.</p>';
+      });
+  </script>
+</body>
+</html>
